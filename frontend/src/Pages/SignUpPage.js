@@ -17,12 +17,19 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
+    if (!username || !password) {
+      setError("username and password must be filled out");
+      return;
+    }
     try {
       const response = await api.post("/users/signup", {
         username,
         password,
       });
-      Auth.authenticateUser();
+      if (response.data.success) {
+        Auth.authenticateUser();
+        navigate("home");
+      }
     } catch (error) {
       setError(error.response.data.message);
     }
